@@ -1,0 +1,78 @@
+:root {
+  --bg: #120e0b;
+  --bg-raise: #1b1510;
+  --bg-card: #231a14;
+  --line: rgba(214, 176, 122, 0.22);
+  --line-strong: rgba(214, 176, 122, 0.45);
+  --ink: #f0e6d4;
+  --muted: #b5a48c;
+  --copper: #d7a45a;
+  --copper-deep: #a66b2d;
+  --ash: #7f9aa0;
+  --blood: #c44a32;
+  --ok: #7eae6a;
+  --mana: #4f8f96;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Source Sans 3", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  font-family: var(--font-body);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(166, 107, 45, 0.18), transparent 50%),
+    radial-gradient(900px 400px at 100% 0%, rgba(79, 143, 150, 0.1), transparent 45%),
+    var(--bg);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
