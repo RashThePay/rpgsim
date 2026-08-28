@@ -1,5 +1,16 @@
-import { getItem } from "./catalog";
 import type { CharacterLoadout, Loadout, Stats } from "./types";
+import type { ContentRegistry } from "./registry";
+
+export const EMPTY_STATS: Stats = {
+  maxHp: 0,
+  maxMp: 0,
+  atk: 0,
+  def: 0,
+  mag: 0,
+  res: 0,
+  spd: 0,
+  crt: 0,
+};
 
 export function addStats(a: Stats, b: Partial<Stats>): Stats {
   return {
@@ -27,13 +38,13 @@ export function clampStats(stats: Stats): Stats {
   };
 }
 
-export function computeStats(loadout: CharacterLoadout): Stats {
+export function computeStats(loadout: CharacterLoadout, registry: ContentRegistry): Stats {
   let stats = { ...loadout.baseStats };
   const slots: (keyof Loadout)[] = ["weapon", "armor", "accessory"];
   for (const slot of slots) {
     const id = loadout.loadout[slot];
     if (typeof id !== "string") continue;
-    const item = getItem(id);
+    const item = registry.getItem(id);
     if (item?.bonuses) stats = addStats(stats, item.bonuses);
   }
   return clampStats(stats);

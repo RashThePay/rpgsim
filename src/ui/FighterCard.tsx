@@ -1,19 +1,19 @@
 import type { CharacterLoadout } from "../engine/types";
 import { computeStats } from "../engine/stats";
-import { getItem } from "../engine/catalog";
+import { riftRegistry } from "../content";
 import { formatTactic } from "./format";
 
 interface Props {
   character: CharacterLoadout;
-  team: "a" | "b";
+  team: string;
   selected: boolean;
   onSelect: () => void;
   onRemove: () => void;
 }
 
 export function FighterCard({ character, team, selected, onSelect, onRemove }: Props) {
-  const stats = computeStats(character);
-  const weapon = character.loadout.weapon ? getItem(character.loadout.weapon) : undefined;
+  const stats = computeStats(character, riftRegistry);
+  const weapon = character.loadout.weapon ? riftRegistry.getItem(character.loadout.weapon) : undefined;
 
   return (
     <article className={`card ${team} ${selected ? "selected" : ""}`}>

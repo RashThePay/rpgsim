@@ -2,6 +2,15 @@
 
 **Rift Table** is a tick-based RPG combat simulator. You kit each fighter with gear, skills, and a gambit list; the engine then fills action gauges every tick, fires the first ready rule, and writes a replay you can scrub.
 
+## Layout
+
+- `src/engine` — generic simulation rules. `simulateBattle(config, contentRegistry)` does not know what Fireball is.
+- `src/content` — skills, items, statuses, monsters packed into a registry.
+- `src/game` — archetypes, sample encounters, and (later) progression / world.
+- `src/ui` — the table and replay.
+
+Sides are `string` ids. A duel has two; a royale can have twelve one-person sides.
+
 ## How a fight works
 
 1. Every tick, status effects tick (poison, burn, regen, stun, haste, slow) and cooldowns decrement.

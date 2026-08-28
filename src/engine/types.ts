@@ -1,18 +1,9 @@
-export type TeamId = "a" | "b";
+export type TeamId = string;
 export type Slot = "weapon" | "armor" | "accessory";
 export type DamageType = "physical" | "magical";
 export type SkillTarget = "self" | "ally" | "enemy" | "allAllies" | "allEnemies";
-export type StatusId =
-  | "poison"
-  | "burn"
-  | "stun"
-  | "haste"
-  | "slow"
-  | "regen"
-  | "atkUp"
-  | "defDown"
-  | "taunt"
-  | "shielded";
+export type StatusId = string;
+export type StatKey = "atk" | "def" | "mag" | "res" | "spd";
 
 export type SubjectPool = "self" | "ally" | "enemy";
 export type Prefer =
@@ -35,7 +26,13 @@ export interface Stats {
 }
 
 export type SkillEffect =
-  | { type: "damage"; damageType: DamageType; power: number; executeBonus?: number }
+  | {
+      type: "damage";
+      damageType: DamageType;
+      power: number;
+      executeBonus?: number;
+      executeBelowPct?: number;
+    }
   | { type: "heal"; power: number }
   | { type: "restoreMp"; amount: number }
   | {
@@ -46,7 +43,7 @@ export type SkillEffect =
       chance: number;
     }
   | { type: "cleanse" }
-  | { type: "shield"; amount: number };
+  | { type: "shield"; amount: number; statusId?: StatusId };
 
 export interface Skill {
   id: string;
@@ -67,6 +64,24 @@ export interface Item {
   charges?: number;
   skillId?: string;
   onHit?: SkillEffect[];
+}
+
+export type StatusTick = { type: "damage" | "heal"; every: number };
+
+export type StatusModifier =
+  | { type: "statMul"; stat: StatKey; mode: "addPct" | "subPct" }
+  | { type: "atbMul"; factor: number }
+  | { type: "preventAction" }
+  | { type: "taunt" }
+  | { type: "holdShield" };
+
+export interface StatusDef {
+  id: StatusId;
+  name: string;
+  short: string;
+  harmful: boolean;
+  tick?: StatusTick;
+  modifiers?: StatusModifier[];
 }
 
 export type TacticPredicate =
@@ -113,6 +128,9 @@ export interface CharacterLoadout {
   loadout: Loadout;
   skills: string[];
   tactics: Tactic[];
+  openingStatuses?: StatusInstance[];
+  openingHp?: number;
+  openingMp?: number;
 }
 
 export interface StatusInstance {
@@ -185,15 +203,22 @@ export interface TickFrame {
   events: CombatEvent[];
 }
 
+export interface BattleSide {
+  id: TeamId;
+  name: string;
+  combatants: CharacterLoadout[];
+}
+
 export interface BattleConfig {
-  teamA: CharacterLoadout[];
-  teamB: CharacterLoadout[];
+  sides: BattleSide[];
   seed: number;
   maxTicks?: number;
 }
 
 export interface BattleResult {
   winner: TeamId | "draw";
+  winnerName?: string;
+  sides: { id: TeamId; name: string }[];
   ticks: number;
   frames: TickFrame[];
   events: CombatEvent[];

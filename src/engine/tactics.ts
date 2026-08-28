@@ -1,4 +1,3 @@
-import { getSkill } from "./catalog";
 import type {
   Combatant,
   Prefer,
@@ -8,7 +7,9 @@ import type {
   TacticCondition,
   TacticPredicate,
 } from "./types";
+import type { ContentRegistry } from "./registry";
 import { pickIndex, type Rng } from "./rng";
+import { isTaunting } from "./modifiers";
 
 export function hpPct(unit: Combatant): number {
   return unit.stats.maxHp <= 0 ? 0 : (unit.hp / unit.stats.maxHp) * 100;
@@ -22,7 +23,12 @@ export function hasStatus(unit: Combatant, id: string): boolean {
   return unit.statuses.some((s) => s.id === id);
 }
 
-export function evalPredicate(unit: Combatant, pred: TacticPredicate, allies: Combatant[], enemies: Combatant[]): boolean {
+export function evalPredicate(
+  unit: Combatant,
+  pred: TacticPredicate,
+  allies: Combatant[],
+  enemies: Combatant[],
+): boolean {
   switch (pred.kind) {
     case "always":
       return true;
@@ -51,7 +57,12 @@ export function poolFor(who: TacticCondition["who"], actor: Combatant, all: Comb
   return all.filter((u) => u.alive && u.team !== actor.team);
 }
 
-export function preferSort(units: Combatant[], prefer: Prefer, rng: Rng): Combatant[] {
+export function preferSort(
+  units: Combatant[],
+  prefer: Prefer,
+  rng: Rng,
+  registry: ContentRegistry,
+): Combatant[] {
   const copy = [...units];
   switch (prefer) {
     case "lowestHp":
@@ -63,9 +74,12 @@ export function preferSort(units: Combatant[], prefer: Prefer, rng: Rng): Combat
     case "slowest":
       return copy.sort((a, b) => a.stats.spd - b.stats.spd || a.id.localeCompare(b.id));
     case "taunting": {
-      const taunters = copy.filter((u) => hasStatus(u, "taunt"));
-      const rest = copy.filter((u) => !hasStatus(u, "taunt"));
-      return [...preferSort(taunters, "highestHp", rng), ...preferSort(rest, "lowestHp", rng)];
+      const taunters = copy.filter((u) => isTaunting(u, registry));
+      const rest = copy.filter((u) => !isTaunting(u, registry));
+      return [
+        ...preferSort(taunters, "highestHp", rng, registry),
+        ...preferSort(rest, "lowestHp", rng, registry),
+      ];
     }
     case "random": {
       const i = pickIndex(rng, copy.length);
@@ -75,38 +89,30 @@ export function preferSort(units: Combatant[], prefer: Prefer, rng: Rng): Combat
   }
 }
 
-export function canUseAction(actor: Combatant, action: TacticAction): boolean {
-  if (action.kind === "attack") return true;
+export function skillForAction(action: TacticAction, registry: ContentRegistry): Skill | undefined {
+  if (action.kind === "attack") return registry.basicAttack;
+  if (action.kind === "skill") return registry.getSkill(action.skillId);
+  const item = registry.getItem(action.itemId);
+  if (!item?.skillId) return undefined;
+  return registry.getSkill(item.skillId);
+}
+
+export function canUseAction(
+  actor: Combatant,
+  action: TacticAction,
+  registry: ContentRegistry,
+): boolean {
   if (action.kind === "item") {
     const pack = actor.loadout.consumables.find((c) => c.itemId === action.itemId);
-    return !!pack && pack.charges > 0;
+    if (!pack || pack.charges <= 0) return false;
+  } else if (action.kind === "skill") {
+    if (!actor.skills.includes(action.skillId)) return false;
   }
-  const skill = getSkill(action.skillId);
+  const skill = skillForAction(action, registry);
   if (!skill) return false;
-  if (!actor.skills.includes(action.skillId) && action.skillId !== "potion" && action.skillId !== "ether") {
-    return false;
-  }
   if (actor.mp < skill.mpCost) return false;
   if ((actor.cooldowns[skill.id] ?? 0) > 0) return false;
   return true;
-}
-
-export function skillForAction(action: TacticAction): Skill | undefined {
-  if (action.kind === "attack") {
-    return {
-      id: "attack",
-      name: "Strike",
-      description: "A basic attack.",
-      mpCost: 0,
-      cooldown: 0,
-      target: "enemy",
-      effects: [{ type: "damage", damageType: "physical", power: 1 }],
-    };
-  }
-  if (action.kind === "item") {
-    return getSkill(action.itemId);
-  }
-  return getSkill(action.skillId);
 }
 
 export interface ChosenAction {
@@ -115,21 +121,28 @@ export interface ChosenAction {
   targets: Combatant[];
 }
 
-export function chooseAction(actor: Combatant, all: Combatant[], rng: Rng): ChosenAction | null {
+export function chooseAction(
+  actor: Combatant,
+  all: Combatant[],
+  rng: Rng,
+  registry: ContentRegistry,
+): ChosenAction | null {
   const allies = all.filter((u) => u.team === actor.team);
   const enemies = all.filter((u) => u.team !== actor.team);
 
   for (const tactic of actor.tactics) {
     if (!tactic.enabled) continue;
-    if (!canUseAction(actor, tactic.action)) continue;
-    const skill = skillForAction(tactic.action);
+    if (!canUseAction(actor, tactic.action, registry)) continue;
+    const skill = skillForAction(tactic.action, registry);
     if (!skill) continue;
 
     const conditionPool = poolFor(tactic.condition.who, actor, all);
-    const matches = conditionPool.filter((u) => evalPredicate(u, tactic.condition.predicate, allies, enemies));
+    const matches = conditionPool.filter((u) =>
+      evalPredicate(u, tactic.condition.predicate, allies, enemies),
+    );
     if (matches.length === 0) continue;
 
-    const targets = resolveSkillTargets(actor, skill, matches, all, tactic.prefer, rng);
+    const targets = resolveSkillTargets(actor, skill, matches, all, tactic.prefer, rng, registry);
     if (targets.length === 0) continue;
     return { tactic, skill, targets };
   }
@@ -144,6 +157,7 @@ function resolveSkillTargets(
   all: Combatant[],
   prefer: Prefer,
   rng: Rng,
+  registry: ContentRegistry,
 ): Combatant[] {
   const allies = all.filter((u) => u.alive && u.team === actor.team);
   const enemies = all.filter((u) => u.alive && u.team !== actor.team);
@@ -158,23 +172,28 @@ function resolveSkillTargets(
     case "ally": {
       const fromMatches = matches.filter((u) => u.team === actor.team && u.alive);
       const pool = fromMatches.length > 0 ? fromMatches : allies;
-      const sorted = preferSort(pool, prefer, rng);
+      const sorted = preferSort(pool, prefer, rng, registry);
       return sorted[0] ? [sorted[0]] : [];
     }
     case "enemy": {
       const fromMatches = matches.filter((u) => u.team !== actor.team && u.alive);
       let pool = fromMatches.length > 0 ? fromMatches : enemies;
       if (prefer !== "taunting") {
-        const taunters = pool.filter((u) => hasStatus(u, "taunt"));
+        const taunters = pool.filter((u) => isTaunting(u, registry));
         if (taunters.length > 0 && fromMatches.length === 0) pool = taunters;
       }
-      const sorted = preferSort(pool, prefer, rng);
+      const sorted = preferSort(pool, prefer, rng, registry);
       return sorted[0] ? [sorted[0]] : [];
     }
   }
 }
 
-export function fallbackAttack(actor: Combatant, all: Combatant[], rng: Rng): ChosenAction | null {
+export function fallbackAttack(
+  actor: Combatant,
+  all: Combatant[],
+  rng: Rng,
+  registry: ContentRegistry,
+): ChosenAction | null {
   const enemies = all.filter((u) => u.alive && u.team !== actor.team);
   if (enemies.length === 0) return null;
   const tactic: Tactic = {
@@ -184,8 +203,9 @@ export function fallbackAttack(actor: Combatant, all: Combatant[], rng: Rng): Ch
     prefer: "lowestHp",
     action: { kind: "attack" },
   };
-  const skill = skillForAction(tactic.action)!;
-  const targets = resolveSkillTargets(actor, skill, enemies, all, "lowestHp", rng);
+  const skill = skillForAction(tactic.action, registry);
+  if (!skill) return null;
+  const targets = resolveSkillTargets(actor, skill, enemies, all, "lowestHp", rng, registry);
   if (targets.length === 0) return null;
   return { tactic, skill, targets };
 }

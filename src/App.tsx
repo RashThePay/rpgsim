@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { simulateBattle, type BattleResult, type CharacterLoadout } from "./engine";
-import { ARCHETYPES, createCharacter, sampleEncounter, sampleSkirmish } from "./data/templates";
+import { ARCHETYPES, createCharacter, duelConfig, sampleEncounter, sampleSkirmish } from "./game";
+import { riftRegistry } from "./content";
 import { CharacterEditor } from "./ui/CharacterEditor";
 import { FighterCard } from "./ui/FighterCard";
 import { BattleView } from "./ui/BattleView";
@@ -58,7 +59,7 @@ export default function App() {
       setError("Each side needs at least one fighter.");
       return;
     }
-    const battle = simulateBattle({ teamA, teamB, seed: nextSeed });
+    const battle = simulateBattle(duelConfig(teamA, teamB, nextSeed), riftRegistry);
     setSeed(nextSeed);
     setResult(battle);
     setBattleId((n) => n + 1);

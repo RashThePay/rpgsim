@@ -1,15 +1,14 @@
-import type { CharacterLoadout, Prefer, StatusId, Tactic, TacticAction, TacticPredicate } from "../engine/types";
+import type { CharacterLoadout, Prefer, Tactic, TacticAction, TacticPredicate } from "../engine/types";
 import {
   ACCESSORIES,
   ARMORS,
   CONSUMABLES,
   SKILL_LIST,
-  STATUS_LABELS,
   WEAPONS,
-  getSkill,
-} from "../engine/catalog";
+  riftRegistry,
+} from "../content";
 import { computeStats } from "../engine/stats";
-import { ARCHETYPES, ARCHETYPE_SKILLS, ARCHETYPE_STATS, defaultTactics, makeTactic } from "../data/templates";
+import { ARCHETYPES, ARCHETYPE_SKILLS, ARCHETYPE_STATS, defaultTactics, makeTactic } from "../game";
 import { PREFER_LABELS } from "./format";
 
 interface Props {
@@ -30,7 +29,7 @@ const PREDICATES: TacticPredicate["kind"][] = [
   "enemiesAliveGte",
 ];
 
-const STATUSES = Object.keys(STATUS_LABELS) as StatusId[];
+const STATUSES = riftRegistry.statuses();
 
 function withPredicate(pred: TacticPredicate, kind: TacticPredicate["kind"]): TacticPredicate {
   switch (kind) {
@@ -51,7 +50,7 @@ function withPredicate(pred: TacticPredicate, kind: TacticPredicate["kind"]): Ta
 }
 
 export function CharacterEditor({ character, onChange, onClose }: Props) {
-  const stats = computeStats(character);
+  const stats = computeStats(character, riftRegistry);
 
   function patch(partial: Partial<CharacterLoadout>) {
     onChange({ ...character, ...partial });
@@ -366,15 +365,15 @@ export function CharacterEditor({ character, onChange, onClose }: Props) {
                             ...tactic.condition,
                             predicate: {
                               ...tactic.condition.predicate,
-                              status: e.target.value as StatusId,
+                              status: e.target.value,
                             } as TacticPredicate,
                           },
                         })
                       }
                     >
                       {STATUSES.map((s) => (
-                        <option key={s} value={s}>
-                          {STATUS_LABELS[s]}
+                        <option key={s.id} value={s.id}>
+                          {s.name}
                         </option>
                       ))}
                     </select>
@@ -421,7 +420,7 @@ export function CharacterEditor({ character, onChange, onClose }: Props) {
                     <option value="attack">Strike</option>
                     {character.skills.map((id) => (
                       <option key={id} value={`skill:${id}`}>
-                        {getSkill(id)?.name ?? id}
+                        {riftRegistry.getSkill(id)?.name ?? id}
                       </option>
                     ))}
                     {character.loadout.consumables.map((c) => (

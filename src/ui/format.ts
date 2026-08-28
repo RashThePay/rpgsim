@@ -1,7 +1,11 @@
-import type { CharacterLoadout, StatusId, Tactic, TacticPredicate } from "../engine/types";
-import { STATUS_LABELS } from "../engine/catalog";
+import type { CharacterLoadout, Tactic, TacticPredicate } from "../engine/types";
+import { riftRegistry } from "../content";
 
 export const TEAM_LABELS = { a: "Ashen Line", b: "Cinder Host" } as const;
+
+function statusName(id: string): string {
+  return riftRegistry.getStatus(id)?.name ?? id;
+}
 
 export function formatPredicate(pred: TacticPredicate): string {
   switch (pred.kind) {
@@ -16,9 +20,9 @@ export function formatPredicate(pred: TacticPredicate): string {
     case "mpAbove":
       return `MP > ${pred.pct}%`;
     case "hasStatus":
-      return `has ${STATUS_LABELS[pred.status]}`;
+      return `has ${statusName(pred.status)}`;
     case "missingStatus":
-      return `no ${STATUS_LABELS[pred.status]}`;
+      return `no ${statusName(pred.status)}`;
     case "alliesAliveGte":
       return `${pred.count}+ allies up`;
     case "enemiesAliveGte":
@@ -42,18 +46,9 @@ export function pct(n: number, d: number): number {
   return Math.max(0, Math.min(100, (n / d) * 100));
 }
 
-export const STATUS_SHORT: Record<StatusId, string> = {
-  poison: "PSN",
-  burn: "BRN",
-  stun: "STN",
-  haste: "HST",
-  slow: "SLW",
-  regen: "RGN",
-  atkUp: "ATK",
-  defDown: "BRK",
-  taunt: "TNT",
-  shielded: "AEG",
-};
+export function statusShort(id: string): string {
+  return riftRegistry.getStatus(id)?.short ?? id.slice(0, 3).toUpperCase();
+}
 
 export const PREFER_LABELS = {
   lowestHp: "Lowest HP",

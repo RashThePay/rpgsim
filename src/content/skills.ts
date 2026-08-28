@@ -1,20 +1,7 @@
-import type { Item, Skill, Stats, StatusId } from "./types";
+import type { Skill } from "../engine/types";
 
-export const STATUS_LABELS: Record<StatusId, string> = {
-  poison: "Poison",
-  burn: "Burn",
-  stun: "Stun",
-  haste: "Haste",
-  slow: "Slow",
-  regen: "Regen",
-  atkUp: "Might",
-  defDown: "Shatter",
-  taunt: "Taunt",
-  shielded: "Aegis",
-};
-
-export const SKILLS: Record<string, Skill> = {
-  "power-strike": {
+export const SKILLS: Skill[] = [
+  {
     id: "power-strike",
     name: "Power Strike",
     description: "A committed blow. Physical damage with extra force.",
@@ -23,7 +10,7 @@ export const SKILLS: Record<string, Skill> = {
     target: "enemy",
     effects: [{ type: "damage", damageType: "physical", power: 1.45 }],
   },
-  bash: {
+  {
     id: "bash",
     name: "Shield Bash",
     description: "Slam the foe. Chance to stun.",
@@ -35,7 +22,7 @@ export const SKILLS: Record<string, Skill> = {
       { type: "applyStatus", status: "stun", duration: 14, potency: 1, chance: 0.55 },
     ],
   },
-  taunt: {
+  {
     id: "taunt",
     name: "Taunt",
     description: "Force attention. Enemies prefer this target.",
@@ -44,19 +31,16 @@ export const SKILLS: Record<string, Skill> = {
     target: "self",
     effects: [{ type: "applyStatus", status: "taunt", duration: 36, potency: 1, chance: 1 }],
   },
-  "shield-wall": {
+  {
     id: "shield-wall",
     name: "Shield Wall",
     description: "Raise a barrier and brace.",
     mpCost: 12,
     cooldown: 48,
     target: "self",
-    effects: [
-      { type: "shield", amount: 55 },
-      { type: "applyStatus", status: "shielded", duration: 24, potency: 1, chance: 1 },
-    ],
+    effects: [{ type: "shield", amount: 55, statusId: "shielded" }],
   },
-  "poison-stab": {
+  {
     id: "poison-stab",
     name: "Venom Edge",
     description: "A cut that lingers.",
@@ -68,7 +52,7 @@ export const SKILLS: Record<string, Skill> = {
       { type: "applyStatus", status: "poison", duration: 48, potency: 9, chance: 0.9 },
     ],
   },
-  backstab: {
+  {
     id: "backstab",
     name: "Backstab",
     description: "Punish the wounded. Extra damage below 40% HP.",
@@ -81,10 +65,11 @@ export const SKILLS: Record<string, Skill> = {
         damageType: "physical",
         power: 1.2,
         executeBonus: 0.7,
+        executeBelowPct: 40,
       },
     ],
   },
-  haste: {
+  {
     id: "haste",
     name: "Fleetfoot",
     description: "Quicken the action gauge.",
@@ -93,7 +78,7 @@ export const SKILLS: Record<string, Skill> = {
     target: "ally",
     effects: [{ type: "applyStatus", status: "haste", duration: 40, potency: 1, chance: 1 }],
   },
-  fireball: {
+  {
     id: "fireball",
     name: "Fireball",
     description: "A searing bolt. May ignite.",
@@ -105,7 +90,7 @@ export const SKILLS: Record<string, Skill> = {
       { type: "applyStatus", status: "burn", duration: 28, potency: 8, chance: 0.45 },
     ],
   },
-  blizzard: {
+  {
     id: "blizzard",
     name: "Blizzard",
     description: "Freeze the field. Hits all enemies and slows.",
@@ -117,7 +102,7 @@ export const SKILLS: Record<string, Skill> = {
       { type: "applyStatus", status: "slow", duration: 22, potency: 1, chance: 0.7 },
     ],
   },
-  "arcane-bolt": {
+  {
     id: "arcane-bolt",
     name: "Arcane Bolt",
     description: "Cheap, reliable magic.",
@@ -126,7 +111,7 @@ export const SKILLS: Record<string, Skill> = {
     target: "enemy",
     effects: [{ type: "damage", damageType: "magical", power: 1.05 }],
   },
-  ignite: {
+  {
     id: "ignite",
     name: "Ignite",
     description: "Lock a burn onto a single foe.",
@@ -138,7 +123,7 @@ export const SKILLS: Record<string, Skill> = {
       { type: "damage", damageType: "magical", power: 0.4 },
     ],
   },
-  heal: {
+  {
     id: "heal",
     name: "Mend",
     description: "Restore a wounded ally.",
@@ -147,7 +132,7 @@ export const SKILLS: Record<string, Skill> = {
     target: "ally",
     effects: [{ type: "heal", power: 1.35 }],
   },
-  "mass-heal": {
+  {
     id: "mass-heal",
     name: "Circle of Mercy",
     description: "Heal the whole side.",
@@ -156,7 +141,7 @@ export const SKILLS: Record<string, Skill> = {
     target: "allAllies",
     effects: [{ type: "heal", power: 0.85 }],
   },
-  bless: {
+  {
     id: "bless",
     name: "Bless",
     description: "Grant might to an ally.",
@@ -165,16 +150,16 @@ export const SKILLS: Record<string, Skill> = {
     target: "ally",
     effects: [{ type: "applyStatus", status: "atkUp", duration: 40, potency: 25, chance: 1 }],
   },
-  cleanse: {
+  {
     id: "cleanse",
     name: "Cleanse",
-    description: "Strip poison, burn, slow, and shatter.",
+    description: "Strip harmful statuses.",
     mpCost: 8,
     cooldown: 20,
     target: "ally",
     effects: [{ type: "cleanse" }],
   },
-  regenerate: {
+  {
     id: "regenerate",
     name: "Regenerate",
     description: "A lingering salve.",
@@ -183,7 +168,7 @@ export const SKILLS: Record<string, Skill> = {
     target: "ally",
     effects: [{ type: "applyStatus", status: "regen", duration: 40, potency: 10, chance: 1 }],
   },
-  "aimed-shot": {
+  {
     id: "aimed-shot",
     name: "Aimed Shot",
     description: "Precise physical damage.",
@@ -192,7 +177,7 @@ export const SKILLS: Record<string, Skill> = {
     target: "enemy",
     effects: [{ type: "damage", damageType: "physical", power: 1.35 }],
   },
-  "pin-down": {
+  {
     id: "pin-down",
     name: "Pin Down",
     description: "Slow the target and chip health.",
@@ -204,7 +189,7 @@ export const SKILLS: Record<string, Skill> = {
       { type: "applyStatus", status: "slow", duration: 30, potency: 1, chance: 0.85 },
     ],
   },
-  execute: {
+  {
     id: "execute",
     name: "Execute",
     description: "Finish the weak. Massive bonus below 35% HP.",
@@ -212,10 +197,16 @@ export const SKILLS: Record<string, Skill> = {
     cooldown: 24,
     target: "enemy",
     effects: [
-      { type: "damage", damageType: "physical", power: 1.1, executeBonus: 1.1 },
+      {
+        type: "damage",
+        damageType: "physical",
+        power: 1.1,
+        executeBonus: 1.1,
+        executeBelowPct: 35,
+      },
     ],
   },
-  rage: {
+  {
     id: "rage",
     name: "Bloodrage",
     description: "Might up, armor down. Reckless.",
@@ -227,7 +218,7 @@ export const SKILLS: Record<string, Skill> = {
       { type: "applyStatus", status: "defDown", duration: 36, potency: 25, chance: 1 },
     ],
   },
-  cleave: {
+  {
     id: "cleave",
     name: "Cleave",
     description: "Sweep all enemies.",
@@ -236,7 +227,7 @@ export const SKILLS: Record<string, Skill> = {
     target: "allEnemies",
     effects: [{ type: "damage", damageType: "physical", power: 0.95 }],
   },
-  shatter: {
+  {
     id: "shatter",
     name: "Armor Break",
     description: "Lower the foe's defense.",
@@ -248,7 +239,7 @@ export const SKILLS: Record<string, Skill> = {
       { type: "applyStatus", status: "defDown", duration: 32, potency: 30, chance: 1 },
     ],
   },
-  potion: {
+  {
     id: "potion",
     name: "Potion",
     description: "A flask of red. Restores HP.",
@@ -257,7 +248,7 @@ export const SKILLS: Record<string, Skill> = {
     target: "self",
     effects: [{ type: "heal", power: 1.1 }],
   },
-  ether: {
+  {
     id: "ether",
     name: "Ether",
     description: "Restores MP.",
@@ -266,160 +257,13 @@ export const SKILLS: Record<string, Skill> = {
     target: "self",
     effects: [{ type: "restoreMp", amount: 40 }],
   },
-};
-
-export const ITEMS: Record<string, Item> = {
-  "iron-longsword": {
-    id: "iron-longsword",
-    name: "Iron Longsword",
-    slot: "weapon",
-    description: "Honest steel. +12 ATK.",
-    bonuses: { atk: 12 },
+  {
+    id: "share-ether",
+    name: "Share Ether",
+    description: "Restore an ally's MP.",
+    mpCost: 0,
+    cooldown: 0,
+    target: "ally",
+    effects: [{ type: "restoreMp", amount: 40 }],
   },
-  "war-axe": {
-    id: "war-axe",
-    name: "War Axe",
-    slot: "weapon",
-    description: "Heavy and mean. +18 ATK, −5 SPD.",
-    bonuses: { atk: 18, spd: -5 },
-  },
-  "twin-daggers": {
-    id: "twin-daggers",
-    name: "Twin Daggers",
-    slot: "weapon",
-    description: "Quick knives. +8 ATK, +10 SPD, +8 CRT.",
-    bonuses: { atk: 8, spd: 10, crt: 8 },
-  },
-  "flame-staff": {
-    id: "flame-staff",
-    name: "Ember Staff",
-    slot: "weapon",
-    description: "A cinder at the tip. +14 MAG, +6 MP.",
-    bonuses: { mag: 14, maxMp: 6 },
-  },
-  longbow: {
-    id: "longbow",
-    name: "Ash Longbow",
-    slot: "weapon",
-    description: "Far and fair. +11 ATK, +6 SPD.",
-    bonuses: { atk: 11, spd: 6 },
-  },
-  "blessed-mace": {
-    id: "blessed-mace",
-    name: "Blessed Mace",
-    slot: "weapon",
-    description: "Warm to the touch. +8 ATK, +8 MAG.",
-    bonuses: { atk: 8, mag: 8 },
-  },
-  "plate-mail": {
-    id: "plate-mail",
-    name: "Plate Mail",
-    slot: "armor",
-    description: "Slow fortress. +28 HP, +14 DEF, −6 SPD.",
-    bonuses: { maxHp: 28, def: 14, spd: -6 },
-  },
-  leather: {
-    id: "leather",
-    name: "Leather Jack",
-    slot: "armor",
-    description: "Light and quiet. +10 HP, +6 DEF, +5 SPD.",
-    bonuses: { maxHp: 10, def: 6, spd: 5 },
-  },
-  "mage-robes": {
-    id: "mage-robes",
-    name: "Ashen Robes",
-    slot: "armor",
-    description: "Wards and weave. +12 MP, +10 RES, +4 MAG.",
-    bonuses: { maxMp: 12, res: 10, mag: 4 },
-  },
-  chain: {
-    id: "chain",
-    name: "Chain Hauberk",
-    slot: "armor",
-    description: "A middle path. +16 HP, +10 DEF.",
-    bonuses: { maxHp: 16, def: 10 },
-  },
-  "cleric-vestments": {
-    id: "cleric-vestments",
-    name: "Vestments",
-    slot: "armor",
-    description: "Soft cloth, hard faith. +14 HP, +8 RES, +4 MAG.",
-    bonuses: { maxHp: 14, res: 8, mag: 4 },
-  },
-  "swift-ring": {
-    id: "swift-ring",
-    name: "Swift Ring",
-    slot: "accessory",
-    description: "The world drags behind you. +14 SPD.",
-    bonuses: { spd: 14 },
-  },
-  "brutal-charm": {
-    id: "brutal-charm",
-    name: "Brutal Charm",
-    slot: "accessory",
-    description: "A tooth on a cord. +10 CRT, +4 ATK.",
-    bonuses: { crt: 10, atk: 4 },
-  },
-  "sage-bead": {
-    id: "sage-bead",
-    name: "Sage Bead",
-    slot: "accessory",
-    description: "A quiet mind. +14 MP, +5 MAG.",
-    bonuses: { maxMp: 14, mag: 5 },
-  },
-  "lifeblood-band": {
-    id: "lifeblood-band",
-    name: "Lifeblood Band",
-    slot: "accessory",
-    description: "Thrums with pulse. +20 HP.",
-    bonuses: { maxHp: 20 },
-  },
-  "warding-amulet": {
-    id: "warding-amulet",
-    name: "Warding Amulet",
-    slot: "accessory",
-    description: "Turns blades and hexes. +8 DEF, +8 RES.",
-    bonuses: { def: 8, res: 8 },
-  },
-  potion: {
-    id: "potion",
-    name: "Potion",
-    slot: "consumable",
-    description: "Drink when the line breaks. Heals self.",
-    charges: 2,
-    skillId: "potion",
-  },
-  ether: {
-    id: "ether",
-    name: "Ether",
-    slot: "consumable",
-    description: "A sip of the weave.",
-    charges: 1,
-    skillId: "ether",
-  },
-};
-
-export const EMPTY_STATS: Stats = {
-  maxHp: 0,
-  maxMp: 0,
-  atk: 0,
-  def: 0,
-  mag: 0,
-  res: 0,
-  spd: 0,
-  crt: 0,
-};
-
-export function getSkill(id: string): Skill | undefined {
-  return SKILLS[id];
-}
-
-export function getItem(id: string): Item | undefined {
-  return ITEMS[id];
-}
-
-export const WEAPONS = Object.values(ITEMS).filter((i) => i.slot === "weapon");
-export const ARMORS = Object.values(ITEMS).filter((i) => i.slot === "armor");
-export const ACCESSORIES = Object.values(ITEMS).filter((i) => i.slot === "accessory");
-export const CONSUMABLES = Object.values(ITEMS).filter((i) => i.slot === "consumable");
-export const SKILL_LIST = Object.values(SKILLS).filter((s) => s.id !== "potion" && s.id !== "ether");
+];

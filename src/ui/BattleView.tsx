@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { BattleResult, PublicCombatant } from "../engine/types";
-import { STATUS_LABELS } from "../engine/catalog";
-import { pct, STATUS_SHORT, TEAM_LABELS } from "./format";
+import { riftRegistry } from "../content";
+import { pct, statusShort } from "./format";
 
 interface Props {
   result: BattleResult;
@@ -36,9 +36,9 @@ export function BattleView({ result, onEdit, onRerun, seed }: Props) {
     return () => window.clearInterval(id);
   }, [playing, speed, maxTick]);
 
-  const teamA = frame.combatants.filter((c) => c.team === "a");
-  const teamB = frame.combatants.filter((c) => c.team === "b");
   const finished = tick >= maxTick;
+  const winnerLabel =
+    result.winner === "draw" ? "Draw" : `${result.winnerName ?? result.winner} wins`;
 
   return (
     <div className="battle">
@@ -48,13 +48,7 @@ export function BattleView({ result, onEdit, onRerun, seed }: Props) {
         </button>
         <div className="verdict">
           <p className="kicker">Tick {tick} / {maxTick}</p>
-          <h2>
-            {finished
-              ? result.winner === "draw"
-                ? "Draw"
-                : `${TEAM_LABELS[result.winner]} wins`
-              : "Clash in progress"}
-          </h2>
+          <h2>{finished ? winnerLabel : "Clash in progress"}</h2>
         </div>
         <div className="seed-row">
           <label>
@@ -72,11 +66,25 @@ export function BattleView({ result, onEdit, onRerun, seed }: Props) {
       </header>
 
       <div className="field">
-        <TeamColumn team="a" units={teamA} />
-        <div className="rift" aria-hidden>
-          <span>VS</span>
-        </div>
-        <TeamColumn team="b" units={teamB} />
+        {result.sides.flatMap((side, index) => {
+          const column = (
+            <TeamColumn
+              key={side.id}
+              name={side.name}
+              tone={index % 2 === 0 ? "a" : "b"}
+              units={frame.combatants.filter((c) => c.team === side.id)}
+            />
+          );
+          if (index === 1 && result.sides.length === 2) {
+            return [
+              <div key="rift" className="rift" aria-hidden>
+                <span>VS</span>
+              </div>,
+              column,
+            ];
+          }
+          return [column];
+        })}
       </div>
 
       <div className="transport">
@@ -136,10 +144,18 @@ export function BattleView({ result, onEdit, onRerun, seed }: Props) {
   );
 }
 
-function TeamColumn({ team, units }: { team: "a" | "b"; units: PublicCombatant[] }) {
+function TeamColumn({
+  name,
+  tone,
+  units,
+}: {
+  name: string;
+  tone: string;
+  units: PublicCombatant[];
+}) {
   return (
-    <section className={`column ${team}`}>
-      <h3>{TEAM_LABELS[team]}</h3>
+    <section className={`column ${tone}`}>
+      <h3>{name}</h3>
       {units.map((u) => (
         <FighterHud key={u.id} unit={u} />
       ))}
@@ -177,8 +193,8 @@ function FighterHud({ unit }: { unit: PublicCombatant }) {
       </div>
       <ul className="pips">
         {unit.statuses.map((s) => (
-          <li key={s.id} title={`${STATUS_LABELS[s.id]} (${s.remaining})`}>
-            {STATUS_SHORT[s.id]}
+          <li key={s.id} title={`${riftRegistry.getStatus(s.id)?.name ?? s.id} (${s.remaining})`}>
+            {statusShort(s.id)}
           </li>
         ))}
       </ul>
