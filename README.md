@@ -21,3 +21,13 @@ npm run dev
 ```
 
 Open `http://localhost:5173`. Use **Duel preset** or **3v3 preset**, edit a fighter's sheet, then **Simulate battle**.
+
+## Deploy on Vercel
+
+This is a Vite SPA. `vercel.json` pins the Vite preset, builds into `dist`, and rewrites unknown paths to `index.html` so the production URL does not 404.
+
+Import the GitHub repo in Vercel (root directory `.`, production branch `main`) or run:
+
+```bash
+npx vercel --prod
+```
