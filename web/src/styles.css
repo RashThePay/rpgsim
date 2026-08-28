@@ -1,0 +1,375 @@
+:root {
+  --bg: #0f1220;
+  --panel: #1a1f36;
+  --panel-2: #232a4d;
+  --text: #e7eaf5;
+  --muted: #9aa3c7;
+  --hero: #4f8cff;
+  --enemy: #ff5d6c;
+  --accent: #ffd166;
+  --good: #37d67a;
+  --border: #2c335c;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 20% -10%, #1c2447 0%, var(--bg) 55%);
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.hero-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.hero-header h1 {
+  font-size: 3rem;
+  margin: 0;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, var(--hero), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-header .crossed {
+  -webkit-text-fill-color: initial;
+}
+
+.hero-header p {
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.arena {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.party {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.party h2 {
+  margin: 0 0 14px;
+  font-size: 1.3rem;
+}
+
+.party-heroes h2 {
+  color: var(--hero);
+}
+
+.party-enemies h2 {
+  color: var(--enemy);
+}
+
+.member-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 60px;
+}
+
+.member-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.member-info strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.member-stats {
+  display: flex;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.empty-hint {
+  color: var(--muted);
+  font-style: italic;
+  padding: 8px 4px;
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.remove-btn:hover {
+  color: var(--enemy);
+  background: rgba(255, 93, 108, 0.12);
+}
+
+.add-row {
+  display: flex;
+  gap: 10px;
+}
+
+select,
+input[type="text"] {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+.add-btn {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 9px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.add-btn:hover {
+  border-color: var(--hero);
+  color: var(--hero);
+}
+
+.controls {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.seed-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.seed-field input {
+  min-width: 200px;
+}
+
+.simulate-btn {
+  background: linear-gradient(90deg, var(--hero), #7a5cff);
+  border: none;
+  color: white;
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.08s ease, opacity 0.2s ease;
+}
+
+.simulate-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.simulate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.run-error,
+.error-panel {
+  color: var(--enemy);
+  text-align: center;
+}
+
+.error-panel {
+  background: var(--panel);
+  border: 1px solid var(--enemy);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 40px;
+}
+
+.error-panel .hint {
+  color: var(--muted);
+}
+
+.result {
+  margin-top: 12px;
+}
+
+.banner {
+  text-align: center;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+
+.banner h2 {
+  margin: 0 0 4px;
+  font-size: 2rem;
+}
+
+.banner p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.banner-heroes {
+  background: linear-gradient(180deg, rgba(79, 140, 255, 0.18), transparent);
+  border-color: var(--hero);
+}
+
+.banner-enemies {
+  background: linear-gradient(180deg, rgba(255, 93, 108, 0.18), transparent);
+  border-color: var(--enemy);
+}
+
+.banner-draw {
+  background: linear-gradient(180deg, rgba(255, 209, 102, 0.16), transparent);
+  border-color: var(--accent);
+}
+
+.final-state {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.final-team {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.final-team h3 {
+  margin: 0 0 12px;
+}
+
+.hp-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 64px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.hp-row.defeated {
+  opacity: 0.5;
+}
+
+.hp-bar {
+  background: var(--panel-2);
+  border-radius: 8px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.hp-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--good), #b6f36a);
+  transition: width 0.3s ease;
+}
+
+.hp-num {
+  text-align: right;
+  color: var(--muted);
+}
+
+.log {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+
+.log h3 {
+  margin: 0 0 10px;
+}
+
+.log ol {
+  margin: 0;
+  padding-left: 20px;
+  max-height: 360px;
+  overflow-y: auto;
+  line-height: 1.7;
+}
+
+.log li {
+  color: var(--text);
+}
+
+.log-round {
+  color: var(--accent);
+  font-weight: 600;
+  list-style: none;
+  margin-left: -20px;
+  margin-top: 6px;
+}
+
+.log-heal {
+  color: var(--good);
+}
+
+.log-defeat {
+  color: var(--enemy);
+  font-weight: 600;
+}
+
+.log-start,
+.log-end {
+  color: var(--muted);
+  font-style: italic;
+  list-style: none;
+  margin-left: -20px;
+}
+
+code {
+  background: var(--panel-2);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.85em;
+}
+
+@media (max-width: 720px) {
+  .arena,
+  .final-state {
+    grid-template-columns: 1fr;
+  }
+}
