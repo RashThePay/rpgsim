@@ -31,6 +31,9 @@ describe("budget", () => {
     expect(score.total).toBeGreaterThan(0);
     expect(score.over).toBe(false);
     expect(score.total).toBeLessThanOrEqual(BUDGET_CAP);
+    expect(score.categories.arms).toBeGreaterThan(0);
+    expect(score.categories.arts).toBeGreaterThan(0);
+    expect(score.categories.stats).toBe(0);
   });
 
   it("flags a kit that stacks every skill", () => {

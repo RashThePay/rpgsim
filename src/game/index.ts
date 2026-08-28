@@ -58,5 +58,8 @@ export function toSides(teamA: CharacterLoadout[], teamB: CharacterLoadout[]): B
 export { encodeBuild, decodeBuild, tryDecodeBuild, BuildCodeError } from "./codec";
 export { scoreLoadout, BUDGET_CAP, itemCost, skillCost } from "./budget";
 export { describeMode, modeSlots } from "./modes";
+export { ART_MAX, ART_ROLE_LABELS, artPurpose, artRole, kitRoleSummary } from "./arts";
+export type { ArtRole } from "./arts";
+export { gambitSentence, playstyleLines, buildWarnings } from "./gambitCopy";
 export type { ArenaMode, ModeSlot } from "./modes";
 export type { BudgetBreakdown } from "./budget";

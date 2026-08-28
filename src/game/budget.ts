@@ -61,6 +61,12 @@ export interface BudgetBreakdown {
   over: boolean;
   remaining: number;
   lines: CostLine[];
+  categories: {
+    arms: number;
+    arts: number;
+    consumables: number;
+    stats: number;
+  };
 }
 
 export function itemCost(id: string, charges = 1): number {
@@ -73,12 +79,21 @@ export function skillCost(id: string): number {
 
 export function scoreLoadout(loadout: CharacterLoadout, registry: ContentRegistry): BudgetBreakdown {
   const lines: CostLine[] = [];
+  const categories = {
+    arms: 0,
+    arts: 0,
+    consumables: 0,
+    stats: 0,
+  };
   const gear = [loadout.loadout.weapon, loadout.loadout.armor, loadout.loadout.accessory];
   for (const id of gear) {
     if (!id) continue;
     const item = registry.getItem(id);
     const cost = itemCost(id);
-    if (cost > 0) lines.push({ id, label: item?.name ?? id, cost });
+    if (cost > 0) {
+      lines.push({ id, label: item?.name ?? id, cost });
+      categories.arms += cost;
+    }
   }
   for (const pack of loadout.loadout.consumables) {
     if (pack.charges <= 0) continue;
@@ -89,11 +104,15 @@ export function scoreLoadout(loadout: CharacterLoadout, registry: ContentRegistr
       label: `${item?.name ?? pack.itemId} ×${pack.charges}`,
       cost,
     });
+    categories.consumables += cost;
   }
   for (const id of loadout.skills) {
     const skill = registry.getSkill(id);
     const cost = skillCost(id);
-    if (cost > 0) lines.push({ id, label: skill?.name ?? id, cost });
+    if (cost > 0) {
+      lines.push({ id, label: skill?.name ?? id, cost });
+      categories.arts += cost;
+    }
   }
   const total = lines.reduce((s, l) => s + l.cost, 0);
   return {
@@ -102,5 +121,6 @@ export function scoreLoadout(loadout: CharacterLoadout, registry: ContentRegistr
     over: total > BUDGET_CAP,
     remaining: BUDGET_CAP - total,
     lines,
+    categories,
   };
 }
