@@ -1,3 +1,371 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.belt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 22px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, #2a1f16, #1b1510);
+}
+
+.brand,
+.belt nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--font-display);
+}
+
+.brand svg,
+.belt nav svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--copper);
+}
+
+.belt nav {
+  display: flex;
+  gap: 8px;
+}
+
+.belt nav a {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+
+.belt nav a.active {
+  border-color: var(--line-strong);
+  background: rgba(215, 164, 90, 0.12);
+}
+
+.stage {
+  flex: 1;
+  padding: 22px 22px 64px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.hub {
+  text-align: center;
+  padding: 48px 12px 24px;
+}
+
+.hub h1 {
+  font-size: clamp(3rem, 8vw, 5.2rem);
+  letter-spacing: -0.04em;
+}
+
+.hub .lede {
+  margin: 12px auto 36px;
+}
+
+.doors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.door {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 36px 18px;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.door svg {
+  width: 3rem;
+  height: 3rem;
+  color: var(--copper);
+}
+
+.door.arena svg {
+  color: var(--ash);
+}
+
+.door em {
+  color: var(--muted);
+  font-style: normal;
+  font-size: 0.92rem;
+}
+
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.tactics-panel {
+  grid-column: 1 / -1;
+}
+
+.forge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.portrait {
+  width: 88px;
+  height: 88px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: #2a2118;
+  margin-bottom: 8px;
+}
+
+.portrait svg {
+  width: 3rem;
+  height: 3rem;
+  color: var(--copper);
+}
+
+.arch-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.arch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 10px;
+}
+
+.arch-btn svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.arch-btn.on,
+.mode-row button.on,
+.rune.on {
+  border-color: var(--copper);
+  background: #3a2a1c;
+  color: var(--copper);
+}
+
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 0;
+}
+
+.stat-strip div {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 6px;
+}
+
+.stat-strip dt {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.stat-strip dd {
+  margin: 0;
+}
+
+.charge-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.charge-label svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: var(--copper);
+}
+
+.rune {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+.rune svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.rune em {
+  font-style: normal;
+  color: var(--copper);
+  font-size: 0.78rem;
+}
+
+.budget {
+  min-width: 220px;
+}
+
+.budget-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.budget-ico {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: var(--copper);
+}
+
+.budget-head span {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-bar {
+  height: 8px;
+  border-radius: 99px;
+  background: #120e0b;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.budget-bar span {
+  display: block;
+  height: 100%;
+  background: var(--ok);
+}
+
+.budget.tight .budget-bar span {
+  background: var(--copper);
+}
+
+.budget.over .budget-bar span {
+  background: var(--blood);
+}
+
+.budget-warn {
+  color: var(--blood);
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+}
+
+.budget-hint {
+  color: var(--muted);
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+}
+
+.seal-bar {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.seal-bar textarea {
+  width: 100%;
+  background: #120e0b;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  resize: vertical;
+}
+
+.mode-row,
+.arena-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.summon-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.summon-board.royale {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.well {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #18120e;
+  display: grid;
+  gap: 8px;
+}
+
+.well.ready {
+  border-color: rgba(126, 174, 106, 0.45);
+}
+
+.well.illegal,
+.well.bad {
+  border-color: rgba(196, 74, 50, 0.55);
+}
+
+.well-top {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.well-top svg {
+  width: 2rem;
+  height: 2rem;
+  color: var(--copper);
+}
+
+.well textarea {
+  width: 100%;
+  background: #120e0b;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.illegal-tag {
+  color: var(--blood);
+  margin: 0;
+  font-size: 0.85rem;
+}
+
 .app {
   max-width: 1280px;
   margin: 0 auto;
@@ -33,7 +401,11 @@
 
 .toolbar label,
 .editor label,
-.seed-row label {
+.seed-row label,
+.panel label,
+.forge label,
+.arena-actions label,
+.count {
   display: grid;
   gap: 4px;
   font-size: 0.78rem;
@@ -45,7 +417,13 @@
 .editor select,
 .seed-row input,
 .battle input,
-.battle select {
+.battle select,
+.panel input,
+.panel select,
+.forge input,
+.forge select,
+.arena-actions input,
+.count input {
   background: var(--bg);
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -518,7 +896,11 @@ button.danger {
 
 @media (max-width: 900px) {
   .boards,
-  .field {
+  .field,
+  .doors,
+  .forge-grid,
+  .summon-board,
+  .seal-bar {
     grid-template-columns: 1fr;
   }
 

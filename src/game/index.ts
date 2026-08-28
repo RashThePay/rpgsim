@@ -55,7 +55,8 @@ export function toSides(teamA: CharacterLoadout[], teamB: CharacterLoadout[]): B
   ];
 }
 
-/** Placeholder for XP, unlocks, and activity loops. Combat does not read this. */
-export interface ProgressionState {
-  xp: number;
-}
+export { encodeBuild, decodeBuild, tryDecodeBuild, BuildCodeError } from "./codec";
+export { scoreLoadout, BUDGET_CAP, itemCost, skillCost } from "./budget";
+export { describeMode, modeSlots } from "./modes";
+export type { ArenaMode, ModeSlot } from "./modes";
+export type { BudgetBreakdown } from "./budget";

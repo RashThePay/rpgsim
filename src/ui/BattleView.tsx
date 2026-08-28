@@ -44,7 +44,7 @@ export function BattleView({ result, onEdit, onRerun, seed }: Props) {
     <div className="battle">
       <header className="battle-top">
         <button type="button" className="ghost" onClick={onEdit}>
-          ← Loadouts
+          ← Arena
         </button>
         <div className="verdict">
           <p className="kicker">Tick {tick} / {maxTick}</p>

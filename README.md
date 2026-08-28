@@ -21,7 +21,7 @@ Sides are `string` ids. A duel has two; a royale can have twelve one-person side
 
 Tactics are Final Fantasy XII-style gambits: `If [Self/Ally/Foe] [condition] → [skill/item/strike]`, with a preference for lowest HP, fastest, taunters, and so on.
 
-## Develop
+## Play
 
 ```bash
 npm install
@@ -29,7 +29,12 @@ npm test
 npm run dev
 ```
 
-Open `http://localhost:5173`. Use **Duel preset** or **3v3 preset**, edit a fighter's sheet, then **Simulate battle**.
+Open `http://localhost:5173`.
+
+- **Forge** (`/build`) — pick archetype, arms, and arts under a **100 tribute** cap. Copy the compressed **R1.** seal.
+- **Arena** (`/battle`) — paste seals into Duel, 2v2/3v3, or Royale. Over-budget kits are warned on the Forge and **cannot enter** the pit.
+
+PvE comes later. The engine still lives in `src/engine`; this layer is codes, budget, and modes.
 
 ## Deploy on Vercel
 
