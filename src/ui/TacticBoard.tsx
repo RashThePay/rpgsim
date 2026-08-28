@@ -96,7 +96,7 @@ export function TacticBoard({
     <section className="panel gambit-panel">
       <header className="section-head">
         <div>
-          <p className="kicker">Step 5</p>
+          <p className="kicker">Step 4</p>
           <h3>Gambits</h3>
         </div>
         <button type="button" className="ghost" onClick={addGambit}>

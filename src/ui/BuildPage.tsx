@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ACCESSORIES, ARMORS, CONSUMABLES, SKILL_LIST, WEAPONS, riftRegistry } from "../content";
 import {
+  ARCHETYPE_LOADOUT,
   ARCHETYPE_SKILLS,
   ARCHETYPE_STATS,
   ARCHETYPES,
@@ -68,17 +69,38 @@ export function BuildPage() {
   const showLibrary = browseArts || character.skills.length === 0;
 
   function setArchetype(archetype: string) {
+    const kit = ARCHETYPE_LOADOUT[archetype];
     setCharacter({
       ...character,
       archetype,
       baseStats: { ...ARCHETYPE_STATS[archetype] },
+      loadout: kit
+        ? {
+            weapon: kit.weapon,
+            armor: kit.armor,
+            accessory: kit.accessory,
+            consumables: kit.consumables.map((pack) => ({ ...pack })),
+          }
+        : character.loadout,
       skills: [...(ARCHETYPE_SKILLS[archetype] ?? [])],
       tactics: defaultTactics(archetype),
     });
   }
 
   async function copySeal() {
-    await navigator.clipboard.writeText(code);
+    try {
+      await navigator.clipboard.writeText(code);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = code;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1600);
   }
