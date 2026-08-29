@@ -31,6 +31,17 @@ describe("budget", () => {
     expect(score.total).toBeGreaterThan(0);
     expect(score.over).toBe(false);
     expect(score.total).toBeLessThanOrEqual(BUDGET_CAP);
+    expect(score.categories.arms).toBeGreaterThan(0);
+    expect(score.categories.arts).toBeGreaterThan(0);
+    expect(score.categories.stats).toBe(0);
+  });
+
+  it("keeps a stock cleric under the cap", () => {
+    const cleric = createCharacter("Mira", "Cleric");
+    const score = scoreLoadout(cleric, riftRegistry);
+    expect(score.over).toBe(false);
+    expect(score.total).toBeLessThanOrEqual(BUDGET_CAP);
+    expect(score.categories.arms + score.categories.arts + score.categories.consumables).toBe(score.total);
   });
 
   it("flags a kit that stacks every skill", () => {

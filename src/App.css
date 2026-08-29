@@ -55,6 +55,10 @@
   margin: 0 auto;
 }
 
+.stage:has(.forge) {
+  max-width: 1360px;
+}
+
 .hub {
   text-align: center;
   padding: 48px 12px 24px;
@@ -894,14 +898,448 @@ button.danger {
   color: var(--copper-deep);
 }
 
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-head h3 {
+  font-size: 1.35rem;
+}
+
+.meta-pill {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--copper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.forge .panel {
+  position: relative;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 18px;
+  box-shadow: inset 0 1px 0 rgba(215, 164, 90, 0.16), var(--shadow);
+}
+
+.forge-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 18px;
+  align-items: start;
+}
+
+.forge-main {
+  display: grid;
+  gap: 16px;
+}
+
+.forge-rail {
+  position: sticky;
+  top: 16px;
+}
+
+.identity-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.name-field {
+  flex: 1;
+}
+
+.identity .portrait {
+  width: 96px;
+  height: 96px;
+  border: 1px solid var(--line-strong);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(215, 164, 90, 0.18), transparent 62%),
+    #2a2118;
+}
+
+.tribute-board.tight .budget-bar span {
+  background: var(--copper);
+}
+
+.tribute-board.over .budget-bar span {
+  background: var(--blood);
+}
+
+.tribute-board .tribute-readout {
+  display: grid;
+  justify-items: end;
+  margin: 0;
+}
+
+.tribute-board .tribute-readout strong {
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tribute-board .tribute-readout span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.tribute-board.over .tribute-readout strong {
+  color: var(--blood);
+}
+
+.tribute-cats {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+}
+
+.tribute-cats li {
+  display: grid;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.tribute-cats span {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.tribute-cats li.zero {
+  opacity: 0.55;
+}
+
+.gear-rack h4,
+.flask-row h4,
+.art-group h4,
+.summary-block h4 {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+.gear-cards,
+.art-grid,
+.art-equipped {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 8px;
+}
+
+.forge .gear-card,
+.forge .art-tile,
+.forge .flask-card {
+  border-radius: 12px;
+  text-align: left;
+  padding: 12px;
+  display: grid;
+  gap: 4px;
+  background: #18120e;
+  min-height: 0;
+}
+
+.gear-card svg,
+.art-tile svg,
+.flask-card svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--copper);
+}
+
+.gear-card strong,
+.art-tile strong,
+.flask-card strong {
+  display: block;
+}
+
+.gear-card p,
+.flask-card p,
+.art-tile em {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-style: normal;
+  line-height: 1.3;
+}
+
+.gear-card em,
+.art-cost,
+.flask-card em {
+  color: var(--copper);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+}
+
+.gear-card.on,
+.art-tile.equipped,
+.flask-card.on,
+.gambit-card.editing {
+  border-color: var(--copper);
+  background: #3a2a1c;
+}
+
+.art-tile {
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 8px;
+}
+
+.art-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.art-tile.locked {
+  opacity: 0.55;
+}
+
+.art-tile.locked .art-cost {
+  color: var(--blood);
+}
+
+.art-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.browse-arts {
+  justify-self: start;
+}
+
+.flask-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.flask-card {
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.forge .stepper button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 8px;
+}
+
+.gambit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.gambit-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 10px;
+  background: #18120e;
+}
+
+.gambit-card.off {
+  opacity: 0.55;
+}
+
+.gambit-prio {
+  font-family: var(--font-display);
+  color: var(--copper);
+  width: 1.4rem;
+  text-align: center;
+}
+
+.gambit-sentence {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 4px 0;
+  margin: 0;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  line-height: 1.35;
+}
+
+.gambit-tools {
+  display: flex;
+  gap: 4px;
+  opacity: 0.7;
+}
+
+.forge .gambit-tools button {
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+}
+
+.gambit-live {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #18120e;
+  color: var(--copper);
+  line-height: 1.4;
+}
+
+.gambit-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.forge-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(8, 6, 4, 0.72);
+}
+
+.forge-modal {
+  width: min(540px, 100%);
+  display: grid;
+  gap: 12px;
+  background: var(--bg-raise);
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.forge-modal textarea {
+  width: 100%;
+  background: #120e0b;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  resize: vertical;
+}
+
+.summary-card {
+  gap: 12px;
+}
+
+.summary-id {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.summary-id svg {
+  width: 2rem;
+  height: 2rem;
+  color: var(--copper);
+}
+
+.summary-id p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.summary-tribute {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--line);
+}
+
+.summary-tribute.over strong {
+  color: var(--blood);
+}
+
+.stat-strip.compact {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.summary-block ul,
+.style-lines,
+.warn-lines {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.warn-lines {
+  color: #e08b62;
+}
+
+.summary-count {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.seal-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.forge .seal-actions button {
+  border-radius: 10px;
+}
+
 @media (max-width: 900px) {
   .boards,
   .field,
   .doors,
   .forge-grid,
+  .forge-layout,
   .summon-board,
-  .seal-bar {
+  .seal-bar,
+  .flask-cards,
+  .tribute-cats,
+  .gambit-fields {
     grid-template-columns: 1fr;
+  }
+
+  .forge-rail {
+    position: static;
+  }
+
+  .gambit-card {
+    grid-template-columns: auto 1fr;
+  }
+
+  .gambit-tools {
+    grid-column: 1 / -1;
+    justify-content: end;
   }
 
   .rift {
